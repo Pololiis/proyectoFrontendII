@@ -1,12 +1,12 @@
 window.addEventListener("load", function () {
 	/* ---------------------- obtenemos variables globales ---------------------- */
     const form = document.forms[0];
-    const name = document.getElementById("inputNombre");
+    const firstName = document.getElementById("inputNombre");
     const lastName= document.getElementById("inputApellido");
     const email = document.getElementById("inputEmail");
     const password = document.getElementById("inputPassword");
     const repeatPassword = document.getElementById("inputPasswordRepetida");
-    const url = "https://todo-api.ctd.academy/v1";
+    const url = "https://todo-api.ctd.academygfg/v1";
 
 	/* -------------------------------------------------------------------------- */
 	/*            FUNCIÓN 1: Escuchamos el submit y preparamos el envío           */
@@ -14,37 +14,59 @@ window.addEventListener("load", function () {
 	form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const payload = {
-            name: name.value,
-            lastName: lastName.value,
-            email: email.value,
-            password: password.value,
-        }
+        if (password.value === repeatPassword.value) {
 
-        const settings = {
-            method: "POST",
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json'
+            const payload = {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                email: email.value,
+                password: password.value
             }
+    
+            const settings = {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+    
+            realizarRegister(settings);
+    
+            form.reset();
+        
+        } else {
+            alert("Las contraseñas no coinciden.");
         }
-
-        realizarRegister(settings);
-
-        form.reset();
+        console.log("Estoy en la función 1");
     });
 
 	/* -------------------------------------------------------------------------- */
 	/*                    FUNCIÓN 2: Realizar el signup [POST]                    */
 	/* -------------------------------------------------------------------------- */
 	function realizarRegister(settings) {
+        console.log("Estoy en la función 2");
 
         fetch(`${url}/users`, settings)
         .then(response => {
-            if (response.ok) return response.json();
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject(response);
+            }
         })
         .then(data => {
-            console.log(data);
+            if (data.jwt) {
+                localStorage.setItem("jwt", JSON.stringify(data.jwt));
+                location.replace("./mis-tareas.html")
+            }
+        })
+        .catch(err => {
+            if (err.status == 400) {
+                alert("El usuario ya se encuentra registrado / Alguno de los datos requeridos está incompleto");
+            } else {
+                alert("Error del servidor");
+            }
         })
     }
 });
