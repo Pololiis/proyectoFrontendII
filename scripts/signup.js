@@ -6,7 +6,7 @@ window.addEventListener("load", function () {
     const email = document.getElementById("inputEmail");
     const password = document.getElementById("inputPassword");
     const repeatPassword = document.getElementById("inputPasswordRepetida");
-    const url = "https://todo-api.ctd.academygfg/v1";
+    const url = "https://todo-api.ctd.academy/v1";
 
 	/* -------------------------------------------------------------------------- */
 	/*            FUNCIÓN 1: Escuchamos el submit y preparamos el envío           */
@@ -14,7 +14,7 @@ window.addEventListener("load", function () {
 	form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        if (password.value === repeatPassword.value) {
+        if (compararContrasenias(password.value, repeatPassword.value)) {
 
             const payload = {
                 firstName: firstName.value,
@@ -35,17 +35,13 @@ window.addEventListener("load", function () {
     
             form.reset();
         
-        } else {
-            alert("Las contraseñas no coinciden.");
         }
-        console.log("Estoy en la función 1");
     });
 
 	/* -------------------------------------------------------------------------- */
 	/*                    FUNCIÓN 2: Realizar el signup [POST]                    */
 	/* -------------------------------------------------------------------------- */
 	function realizarRegister(settings) {
-        console.log("Estoy en la función 2");
 
         fetch(`${url}/users`, settings)
         .then(response => {

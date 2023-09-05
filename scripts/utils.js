@@ -1,6 +1,5 @@
 /* ---------------------------------- texto --------------------------------- */
 function validarTexto(texto) {
-    
 }
 
 function normalizarTexto(texto) {
@@ -22,6 +21,10 @@ function validarContrasenia(contrasenia) {
 }
 
 function compararContrasenias(contrasenia_1, contrasenia_2) {
-    
+    if (contrasenia_1 === contrasenia_2) {
+        return true;
+    } else {
+        alert("Las contraseñas no coinciden.")
+        return false;
+    }
 }
-
