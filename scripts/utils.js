@@ -12,7 +12,7 @@ function validarEmail(email) {
 }
 
 function normalizarEmail(email) {
-    
+    #aa
 }
 
 /* -------------------------------- password -------------------------------- */
