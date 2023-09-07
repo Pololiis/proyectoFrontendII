@@ -14,7 +14,9 @@ window.addEventListener("load", function () {
 	form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        if (compararContrasenias(password.value, repeatPassword.value)) {
+        if (compararContrasenias(password.value, repeatPassword.value) &&
+            validarContrasenia(password.value) &&
+            validarEmail(email.value)) {
 
             const payload = {
                 firstName: firstName.value,
@@ -54,7 +56,7 @@ window.addEventListener("load", function () {
         .then(data => {
             if (data.jwt) {
                 localStorage.setItem("jwt", JSON.stringify(data.jwt));
-                location.replace("./mis-tareas.html")
+                location.replace("./mis-tareas.html");
             }
         })
         .catch(err => {
