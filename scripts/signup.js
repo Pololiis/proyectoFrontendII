@@ -8,16 +8,34 @@ window.addEventListener("load", function () {
   const repeatPassword = document.getElementById("inputPasswordRepetida");
   const url = "https://todo-api.ctd.academy/v1";
 
+  // ponemos en true solo cuando estén correctos
+  const estadoErroresOK = {
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+    repeatPassword: false,
+  };
+  //   console.log(estadoErroresOK);
+
   /* -------------------------------------------------------------------------- */
   /*            FUNCIÓN 1: Escuchamos el submit y preparamos el envío           */
   /* -------------------------------------------------------------------------- */
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
+    estadoErroresOK.firstName = validarTexto(firstName.value);
+    estadoErroresOK.lastName = validarTexto(lastName.value);
+    estadoErroresOK.email = validarEmail(email.value);
+    estadoErroresOK.password = validarContrasenia(password.value);
+    estadoErroresOK.repeatPassword = compararContrasenias(
+      password.value,
+      repeatPassword.value
+    );
+
     if (
-      compararContrasenias(password.value, repeatPassword.value) &&
-      validarContrasenia(password.value) &&
-      validarEmail(email.value)
+      recorrerEstadoErrores(estadoErroresOK) ==
+      Object.keys(estadoErroresOK).length
     ) {
       const payload = {
         firstName: firstName.value,
@@ -37,6 +55,8 @@ window.addEventListener("load", function () {
       realizarRegister(settings);
 
       form.reset();
+    } else {
+      alert(mostrarErrores(estadoErroresOK).join("\n"));
     }
   });
 
