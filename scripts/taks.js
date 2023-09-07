@@ -8,16 +8,15 @@ window.addEventListener('load', function () {
 
   /* ---------------- variables globales y llamado a funciones ---------------- */
   
-
+const btnCerrarSesion = document.getElementById("closeApp");
 
   /* -------------------------------------------------------------------------- */
   /*                          FUNCIÓN 1 - Cerrar sesión                         */
   /* -------------------------------------------------------------------------- */
 
   btnCerrarSesion.addEventListener('click', function () {
-   
 
-
+    location.replace("./index.html")
 
   });
 
