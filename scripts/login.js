@@ -65,7 +65,7 @@ window.addEventListener('load', function () {
                 if (data.jwt) {
                     // Guardamos el dato jwt en el local storage (este token de autenticación)
                     localStorage.setItem("jwt", JSON.stringify(data.jwt))
-                    // redireccionamos a nuestro dashboard de todo
+                    // redireccionamos a nuestro dashboard de tareas
                     location.replace("./mis-tareas.html")
                 }
 
