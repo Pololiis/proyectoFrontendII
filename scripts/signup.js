@@ -7,6 +7,7 @@ window.addEventListener("load", function () {
   const password = document.getElementById("inputPassword");
   const repeatPassword = document.getElementById("inputPasswordRepetida");
   const url = "https://todo-api.ctd.academy/v1";
+  const btn = document.querySelector('[type = "submit"]');
 
   // ponemos en true solo cuando estén correctos
   const estadoErroresOK = {
@@ -16,27 +17,79 @@ window.addEventListener("load", function () {
     password: false,
     repeatPassword: false,
   };
-  //   console.log(estadoErroresOK);
+  // console.log(estadoErroresOK);
+
+  // Se validan los inputs cumplan los requerimientos
+  firstName.addEventListener("input", (e) => {
+    validarTexto(e);
+    estadoErroresOK.firstName = validarTexto(e);
+  });
+  lastName.addEventListener("input", (e) => {
+    validarTexto(e);
+    estadoErroresOK.lastName = validarTexto(e);
+  });
+  email.addEventListener("input", (e) => {
+    validarEmail(e);
+    estadoErroresOK.email = validarEmail(e);
+  });
+  password.addEventListener("input", (e) => {
+    validarContrasenia(e);
+    estadoErroresOK.password = validarContrasenia(e);
+  });
+  repeatPassword.addEventListener("input", (e) => {
+    compararContrasenias(e, password.value);
+    estadoErroresOK.repeatPassword = compararContrasenias(e, password.value);
+  });
+
+  // Valido que los campos no esté vacío
+  firstName.addEventListener("blur", (e) =>
+    isEmpty(`⚠️Ingrese su ${firstName.name}`, e)
+  );
+
+  lastName.addEventListener("blur", (e) =>
+    isEmpty(`⚠️Ingrese su ${lastName.name}`, e)
+  );
+
+  email.addEventListener("blur", (e) =>
+    isEmpty(`⚠️Ingrese su ${email.name}`, e)
+  );
+
+  password.addEventListener("blur", (e) =>
+    isEmpty(`⚠️Ingrese su ${password.name}`, e)
+  );
+
+  repeatPassword.addEventListener("blur", (e) =>
+    isEmpty(`⚠️Repita su ${repeatPassword.name}`, e)
+  );
 
   /* -------------------------------------------------------------------------- */
-  /*            FUNCIÓN 1: Escuchamos el submit y preparamos el envío           */
-  /* -------------------------------------------------------------------------- */
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
 
-    estadoErroresOK.firstName = validarTexto(firstName.value);
-    estadoErroresOK.lastName = validarTexto(lastName.value);
-    estadoErroresOK.email = validarEmail(email.value);
-    estadoErroresOK.password = validarContrasenia(password.value);
-    estadoErroresOK.repeatPassword = compararContrasenias(
-      password.value,
-      repeatPassword.value
-    );
-
+  btn.addEventListener("mouseover", (e) => {
     if (
       recorrerEstadoErrores(estadoErroresOK) ==
       Object.keys(estadoErroresOK).length
     ) {
+      btn.disabled = false;
+      enviarRegistro();
+    } else {
+      btn.disabled = true;
+      btn.style.backgroundColor = "grey";
+    }
+  });
+
+  btn.addEventListener("mouseleave", (e) => {
+    btn.style.backgroundColor = "#3333ffff";
+  });
+  /* -------------------------------------------------------------------------- */
+  /*            FUNCIÓN 1: Escuchamos el submit y preparamos el envío           */
+  /* -------------------------------------------------------------------------- */
+
+  enviarRegistro = () => {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // console.log(estadoErroresOK);
+
       const payload = {
         firstName: firstName.value,
         lastName: lastName.value,
@@ -55,10 +108,8 @@ window.addEventListener("load", function () {
       realizarRegister(settings);
 
       form.reset();
-    } else {
-      alert(mostrarErrores(estadoErroresOK).join("\n"));
-    }
-  });
+    });
+  };
 
   /* -------------------------------------------------------------------------- */
   /*                    FUNCIÓN 2: Realizar el signup [POST]                    */
@@ -80,9 +131,13 @@ window.addEventListener("load", function () {
       })
       .catch((err) => {
         if (err.status == 400) {
-          alert(
-            "El usuario ya se encuentra registrado / Alguno de los datos requeridos está incompleto"
-          );
+          const message = "El usuario ya se encuentra registrado";
+          console.warn(message);
+          repeatPassword.nextElementSibling.classList.add("error");
+          repeatPassword.nextElementSibling.textContent = message;
+          // alert(
+          //   "El usuario ya se encuentra registrado / Alguno de los datos requeridos está incompleto"
+          // );
         } else {
           alert("Error del servidor");
         }

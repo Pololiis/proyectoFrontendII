@@ -1,10 +1,11 @@
 {
     "configurations": [
+
     {
         "name": "Launch Chrome",
         "request": "launch",
         "type": "chrome",
-        "url": "http://localhost:5500/signup.html",
+        "url": "http://localhost:5500/mis-tareas.html",
         "webRoot": "${workspaceFolder}"
     }
     ]

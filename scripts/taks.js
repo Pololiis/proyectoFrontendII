@@ -77,7 +77,7 @@ window.addEventListener("load", function () {
         if (response.ok) return response.json();
       })
       .then((tareas) => {
-        console.log(tareas);
+        // console.log(tareas);
 
         renderizarTareas(tareas);
         botonesCambioEstado();
@@ -112,11 +112,11 @@ window.addEventListener("load", function () {
       },
     };
 
-    console.log("Creo una nueva tarea en la DB");
+    // console.log("Creo una nueva tarea en la DB");
     fetch(urlTareas, settings)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         consultarTareas();
       })
       .catch((err) => console.log(err));
@@ -175,9 +175,8 @@ window.addEventListener("load", function () {
         </li>
         `;
       }
-
-      numeroDeFinalizadas.textContent = contador;
     });
+    numeroDeFinalizadas.textContent = contador;
   }
 
   /* -------------------------------------------------------------------------- */
@@ -248,7 +247,7 @@ window.addEventListener("load", function () {
           };
 
           fetch(url, settingsBorrar).then((response) => {
-            console.log(response.status);
+            // console.log(response.status);
             consultarTareas();
           });
         }

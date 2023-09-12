@@ -1,38 +1,95 @@
 /* ---------------------------------- texto --------------------------------- */
-function validarTexto(texto) {
-  let textoNormalizado = normalizarTexto(texto);
-  let regExp = new RegExp("^[a-zA-Z]+$");
-  return (
-    regExp.test(textoNormalizado) &&
-    textoNormalizado.length >= 3 &&
-    isNaN(textoNormalizado)
-  );
-}
+const setErrors = (message, field, isError = true) => {
+  // console.log(field);
+  const btn = document.querySelector('[type = "submit"]');
+  if (isError) {
+    field.classList.add("invalid");
+    field.nextElementSibling.classList.add("error");
+    field.nextElementSibling.textContent = message;
+    return false;
+  } else {
+    field.classList.remove("invalid");
+    field.nextElementSibling.classList.remove("error");
+    field.nextElementSibling.textContent = "";
+    return true;
+  }
+};
 
-function normalizarTexto(texto) {
+const isEmpty = (message, e) => {
+  // console.log(e.target);
+
+  const field = e.target;
+  const fieldValue = field.value;
+
+  if (fieldValue.length == 0) {
+    setErrors(message, field);
+  }
+};
+
+function normalizar(texto) {
   return texto.trim().toLowerCase();
 }
 
-/* ---------------------------------- email --------------------------------- */
-function normalizarEmail(email) {
-  return email.toLowerCase();
+function validarTexto(e) {
+  // console.log(e.target);
+  const field = e.target;
+  const fieldValue = normalizar(field.value);
+  const regex = new RegExp("^[a-z]+$");
+
+  if (fieldValue.length < 4 || !regex.test(fieldValue) || !isNaN(fieldValue)) {
+    return setErrors(`🚨 Por favor ingrese un ${field.name} válido`, field);
+    // console.log(setErrors(`🚨 Por favor ingrese un ${field.name} válido`, field));
+  } else {
+    return setErrors("", field, false);
+    // console.log(setErrors("", field, false));
+  }
 }
-function validarEmail(email) {
-  let emailNormalizado = normalizarEmail(email);
-  let regExp = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
-  return regExp.test(emailNormalizado);
+
+/* ---------------------------------- email --------------------------------- */
+
+function validarEmail(e) {
+  // console.log(e.target);
+  const field = e.target;
+  const fieldValue = normalizar(field.value);
+  const regex = new RegExp("^[a-z0-9._-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
+  // console.log(!regex.test(fieldValue));
+
+  if (fieldValue.length < 4 || !regex.test(fieldValue)) {
+    return setErrors(`🚨 Por favor ingrese un ${field.name} válido`, field);
+  } else {
+    return setErrors("", field, false);
+  }
 }
 
 /* -------------------------------- password -------------------------------- */
-function validarContrasenia(contrasenia) {
-  let regExp = new RegExp(
-    "^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,10}$"
+function validarContrasenia(e) {
+  // console.log(e.target);
+  const field = e.target;
+  const fieldValue = field.value;
+  const regex = new RegExp(
+    /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/
   );
-  return regExp.test(contrasenia);
+  // console.log(!regex.test(fieldValue));
+
+  if (!regex.test(fieldValue)) {
+    return setErrors(
+      `🚨 Por favor ingrese una ${field.name} válida. Debe contener mínimo 6 caracteres, incluyendo al menos un número y al menos un carácter especial (!@#$%^&*).`,
+      field
+    );
+  } else {
+    return setErrors("", field, false);
+  }
 }
 
-function compararContrasenias(contrasenia_1, contrasenia_2) {
-  return contrasenia_1 === contrasenia_2;
+function compararContrasenias(e, contrasenia) {
+  const field = e.target;
+  const fieldValue = field.value;
+
+  if (!(fieldValue == contrasenia)) {
+    return setErrors(`🚨 Por favor repita su ${field.name}.`, field);
+  } else {
+    return setErrors("", field, false);
+  }
 }
 
 /* -------------------------------- agregadas -------------------------------- */
@@ -45,36 +102,4 @@ function recorrerEstadoErrores(objeto) {
     }
   }
   return resultado;
-}
-
-function mostrarErrores(objeto) {
-  let errores = [];
-
-  if (!objeto.firstName) {
-    errores.push(
-      `- El nombre debe tener al menos 3 caracteres y no tener valores numéricos.`
-    );
-  }
-
-  if (!objeto.lastName) {
-    errores.push(
-      `- El apellido debe tener al menos 3 caracteres y no tener valores numéricos.`
-    );
-  }
-
-  if (!objeto.email) {
-    errores.push(`- Debe ingresar un email válido.`);
-  }
-
-  if (!objeto.password) {
-    errores.push(
-      `- Contraseña inválida. Tu contraseña debe contener entre 8 y 10 caracteres, incluyendo al menos un número y al menos un carácter especial (!@#$%^&*).`
-    );
-  }
-
-  if (!objeto.repeatPassword) {
-    errores.push(`- Las contraseñas no coinciden.`);
-  }
-
-  return errores;
 }
